@@ -49,7 +49,6 @@ def user_detail_api_view(request, pk):
 
         # delete
         elif request.method == 'DELETE':
-            user = User.objects.filter(id=pk).first()
             user.delete()
             return Response({'message': 'Usuario eliminado correctamente'}, status=status.HTTP_200_OK)
 
