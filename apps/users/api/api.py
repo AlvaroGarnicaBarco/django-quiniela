@@ -6,7 +6,7 @@ from apps.users.api.serializers import UserSerializer, UserListSerializer
 
 
 @api_view(['GET', 'POST'])
-def user_api_view(request):
+def user_list_api_view(request):
 
     # list
     if request.method == 'GET':
