@@ -15,3 +15,4 @@ class PartidoPleno15Serializer(serializers.ModelSerializer):
 class JugadaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Jugada
+
