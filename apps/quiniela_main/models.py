@@ -1,9 +1,23 @@
 from django.db import models
 
 
-class Partido(models.Model):
+class Jornada(models.Model):
     temporada = models.CharField(max_length=9)
-    jornada = models.CharField(max_length=2)
+    num_jornada = models.IntegerField()
+    liga_1 = models.CharField(max_length=24, )
+    liga_2 = models.CharField(max_length=24, blank=True)
+    liga_3 = models.CharField(max_length=24, blank=True)
+    dia_inicio = models.DateField()
+    dia_fin = models.DateField()
+    recaudacion_estimada = models.DecimalField(max_digits=10, decimal_places=2)
+    bote = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f'jornada {self.num_jornada} ({self.temporada})'
+
+
+class Partido(models.Model):
+    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE)
     orden_partido = models.IntegerField()
     dia = models.CharField(max_length=3)
     hora = models.CharField(max_length=5)
@@ -20,12 +34,11 @@ class Partido(models.Model):
     rentabilidad_2 = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self):
-        return f'jornada {self.jornada} - {str(self.orden_partido)} . {self.local} - {self.visitante}'
+        return f'jornada {self.jornada.num_jornada} - {str(self.orden_partido)} . {self.local} - {self.visitante}'
 
 
 class PartidoPleno15(models.Model):
-    temporada = models.CharField(max_length=9)
-    jornada = models.CharField(max_length=2)
+    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE)
     dia = models.CharField(max_length=3)
     hora = models.CharField(max_length=5)
     local = models.CharField(max_length=30)
@@ -56,7 +69,7 @@ class PartidoPleno15(models.Model):
     rentabilidad_visitante_M = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self):
-        return f'jornada {self.jornada} {self.local} - {self.visitante}'
+        return f'jornada {self.jornada.num_jornada} {self.local} - {self.visitante}'
 
     class Meta:
         verbose_name_plural = "Partidos pleno 15"
@@ -68,12 +81,7 @@ class Jugada(models.Model):
         ('X', 'X'),
         ('2', '2'),
     ]
-    PLENO15_CHOICES = [
-        ('0', '0'),
-        ('1', '1'),
-        ('2', '2'),
-        ('M', 'M'),
-    ]
+    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE)
     combinacion = models.CharField(max_length=14, unique=True)
     pos_est = models.IntegerField()
     pos_real = models.IntegerField()
@@ -96,8 +104,6 @@ class Jugada(models.Model):
     partido_12 = models.CharField(max_length=1, choices=PARTIDO_CHOICES)
     partido_13 = models.CharField(max_length=1, choices=PARTIDO_CHOICES)
     partido_14 = models.CharField(max_length=1, choices=PARTIDO_CHOICES)
-    pleno15_local = models.CharField(max_length=1, choices=PLENO15_CHOICES)
-    pleno15_visitante = models.CharField(max_length=1, choices=PLENO15_CHOICES)
 
     def __str__(self):
         return f'{self.combinacion} ({self.pos_real}th pos. real)'

@@ -1,22 +1,27 @@
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quiniela_old.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quiniela.settings.local')
 django.setup()
 
-from apps.quiniela_app.models import Partido, PartidoPleno15
 import requests
 from bs4 import BeautifulSoup
-from apps.quiniela_app.config import jornada_actual, temporada_actual
+from apps.quiniela_main.models import Jornada, Partido, PartidoPleno15
+from apps.quiniela_main.config import jornada_actual
 
 
 def carga_partidos():
+    try:
+        jornada = Jornada.objects.get(num_jornada=jornada_actual)
+    except:
+        return print(f'La jornada {jornada_actual} no existe en el model Jornada')
+
     respuesta = requests.get('https://www.eduardolosilla.es/')
     soup = BeautifulSoup(respuesta.content, 'html.parser')
 
     if soup.find('h3',
                  class_='c-boleto-multiples-caja-base-header__container__jornada ng-star-inserted').text.strip().split()[
-        -1] != jornada_actual:
+        -1] != str(jornada_actual):
         print('Jornada que se está intentando generar partidos no corresponde a la jornada actual')
 
     else:
@@ -43,8 +48,7 @@ def carga_partidos():
             rentabilidad_2 = round(prob_real_2 / prob_est_2, 2)
 
             Partido.objects.update_or_create(
-                temporada=temporada_actual,
-                jornada=jornada_actual,
+                jornada=jornada,
                 orden_partido=orden_partido,
                 defaults={
                     'dia': dia,
@@ -105,8 +109,7 @@ def carga_partidos():
         rentabilidad_visitante_M = round(prob_real_visitante_M / prob_est_visitante_M, 2)
 
         PartidoPleno15.objects.update_or_create(
-            temporada=temporada_actual,
-            jornada=jornada_actual,
+            jornada=jornada,
             defaults={
                 'dia': dia15,
                 'hora': hora15,
@@ -138,10 +141,10 @@ def carga_partidos():
                 'rentabilidad_visitante_M': rentabilidad_visitante_M
             }
         )
+        print('Se han cargado/actualizado los partidos de la jornada', jornada_actual,
+              'en las bases Partido y PartidoPleno15')
 
 
 if __name__ == "__main__":
     print('Por favor espere...')
     carga_partidos()
-    print('Se han cargado/actualizado los partidos de la jornada', jornada_actual,
-          'en las bases Partido y PartidoPleno15')
