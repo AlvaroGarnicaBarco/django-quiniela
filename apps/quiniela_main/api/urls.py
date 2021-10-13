@@ -7,3 +7,4 @@ urlpatterns = [
     path('partidos-pleno15/', PartidoPleno15ListAPIView.as_view(), name='partidopleno15_api'),
     path('jugadas/', JugadaListAPIView.as_view(), name='jugada_api'),
 ]
+
