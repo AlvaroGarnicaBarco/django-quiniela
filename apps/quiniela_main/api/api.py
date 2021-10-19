@@ -4,29 +4,21 @@ from apps.quiniela_main.models import Jornada, Partido, PartidoPleno15, Jugada
 from apps.quiniela_main.api.serializers import JornadaSerializer, PartidoSerializer, PartidoPleno15Serializer, JugadaSerializer
 
 
-class JornadaListAPIView(generics.ListAPIView):
+class JornadaListApi(generics.ListAPIView):
+    queryset = Jornada.objects.all()
     serializer_class = JornadaSerializer
 
-    def get_queryset(self):
-        return Jornada.objects.all()
 
-
-class PartidoListAPIView(generics.ListAPIView):
+class PartidoListApi(generics.ListAPIView):
+    queryset = Partido.objects.all()
     serializer_class = PartidoSerializer
 
-    def get_queryset(self):
-        return Partido.objects.all()
 
-
-class PartidoPleno15ListAPIView(generics.ListAPIView):
+class PartidoPleno15ListApi(generics.ListAPIView):
+    queryset = PartidoPleno15.objects.all()
     serializer_class = PartidoPleno15Serializer
 
-    def get_queryset(self):
-        return PartidoPleno15.objects.all()
 
-
-class JugadaListAPIView(generics.ListAPIView):
+class JugadaListApi(generics.ListAPIView):
+    queryset = Jugada.objects.all()
     serializer_class = JugadaSerializer
-
-    def get_queryset(self):
-        return Jugada.objects.all()
