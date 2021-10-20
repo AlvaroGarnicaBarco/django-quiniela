@@ -15,6 +15,11 @@ class Jornada(models.Model):
     def __str__(self):
         return f'jornada {self.num_jornada} ({self.temporada})'
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['temporada', 'num_jornada'], name='unique_jornada')
+        ]
+
 
 class Partido(models.Model):
     jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE)
@@ -36,9 +41,14 @@ class Partido(models.Model):
     def __str__(self):
         return f'jornada {self.jornada.num_jornada} - {str(self.orden_partido)} . {self.local} - {self.visitante}'
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['jornada', 'orden_partido'], name='unique_partido')
+        ]
+
 
 class PartidoPleno15(models.Model):
-    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE)
+    jornada = models.OneToOneField(Jornada, on_delete=models.CASCADE)
     dia = models.CharField(max_length=3)
     hora = models.CharField(max_length=5)
     local = models.CharField(max_length=30)
@@ -108,3 +118,7 @@ class Jugada(models.Model):
     def __str__(self):
         return f'{self.combinacion} ({self.pos_real}th pos. real)'
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['jornada', 'combinacion'], name='unique_jugada')
+        ]
