@@ -1,5 +1,5 @@
 from django.urls import path
-from apps.quiniela_main.api.api import JornadaListApi, PartidoListApi, PartidoPleno15ListApi, JugadaListApi
+from apps.quiniela_main.api.views import JornadaListApi, PartidoListApi, PartidoPleno15ListApi, JugadaListApi
 
 urlpatterns = [
     path('jornadas/', JornadaListApi.as_view(), name='jornada_api'),
