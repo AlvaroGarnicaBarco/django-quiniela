@@ -121,4 +121,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DRF settings
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,  # para que no convierta los DecimalField a string
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
 }
