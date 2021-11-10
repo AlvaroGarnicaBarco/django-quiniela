@@ -14,7 +14,7 @@ def carga_jugadas():
     try:
         jornada = Jornada.objects.get(num_jornada=jornada_actual)
     except:
-        return print(f'La jornada {jornada_actual} no existe en el model Jornada')
+        return print(f'La jornada {jornada_actual} no existe en el modelo Jornada')
 
     lista_jugadas = []
     for index in range(len(df)):
