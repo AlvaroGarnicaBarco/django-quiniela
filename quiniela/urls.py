@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 
 from rest_framework import permissions
-from rest_framework.authtoken import views
 
 from apps.users.views import Login, Logout
 
@@ -28,8 +27,8 @@ urlpatterns = [
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
-    path('login/', Login.as_view(), name='login'),
-    path('logout/', Logout.as_view(), name='logout'),
+    path('login', Login.as_view(), name='login'),
+    path('logout', Logout.as_view(), name='logout'),
     path('api/', include('apps.users.api.urls')),
     path('api/', include('apps.quiniela_main.api.urls')),
 ]
